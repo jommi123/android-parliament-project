@@ -1,7 +1,6 @@
 package com.example.mpfinalproject.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
