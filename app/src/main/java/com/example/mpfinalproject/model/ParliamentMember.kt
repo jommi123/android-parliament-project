@@ -1,4 +1,4 @@
-package com.example.mpfinalproject.network
+package com.example.mpfinalproject.model
 
 import kotlinx.serialization.Serializable
 
