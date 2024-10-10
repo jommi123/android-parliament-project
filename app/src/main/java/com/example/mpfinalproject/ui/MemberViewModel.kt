@@ -1,10 +1,13 @@
 package com.example.mpfinalproject.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mpfinalproject.network.MemberApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 // 6.10.2024, Jommi Koljonen, 2013099
 
@@ -34,5 +37,7 @@ class MemberViewModel : ViewModel() {
             currentState.copy(comment = input)
         }
     }
+
+
 
 }

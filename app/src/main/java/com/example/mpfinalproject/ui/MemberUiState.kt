@@ -1,6 +1,6 @@
 package com.example.mpfinalproject.ui
 
-import com.example.mpfinalproject.data.ParliamentMember
+import com.example.mpfinalproject.network.ParliamentMember
 
 // 6.10.2024, Jommi Koljonen, 2013099
 
