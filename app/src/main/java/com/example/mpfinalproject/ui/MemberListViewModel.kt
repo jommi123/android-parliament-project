@@ -38,7 +38,7 @@ class MemberListViewModel(private val memberDataRepository: MemberDataRepository
     fun getMembersData() {
         viewModelScope.launch {
             //val members = MemberApi.retrofitService.getMembers()
-//            val memberDataRepository = NetworkMemberDataRepository()
+            // val memberDataRepository = NetworkMemberDataRepository()
             val members = memberDataRepository.getMemberData()
 
             _uiState.update { currentState ->

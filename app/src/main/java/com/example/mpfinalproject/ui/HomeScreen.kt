@@ -9,8 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.mpfinalproject.model.ParliamentMember
 
 // 4.10.2024, Jommi Koljonen, 2013099
@@ -29,9 +32,9 @@ fun HomeScreen(
 
         }
     }
-
-
+    
 }
+
 
 
 //@Composable
@@ -64,6 +67,13 @@ fun MemberCard(
 //                modifier = Modifier
 //                    .height(120.dp)
 //            )
+
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data("https://avoindata.eduskunta.fi/" + member.pictureUrl)
+                    .build(),
+                contentDescription = "parliament member picture")
+
             Text(text = member.firstname)
 
         }

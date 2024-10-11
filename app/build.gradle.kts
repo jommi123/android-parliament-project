@@ -90,4 +90,7 @@ dependencies {
 
     // Gson
     implementation(libs.converter.gson)
+
+    // Coil
+    implementation(libs.coil.compose)
 }
