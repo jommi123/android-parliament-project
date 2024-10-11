@@ -1,4 +1,4 @@
-package com.example.mpfinalproject.ui
+package com.example.mpfinalproject.ui.home
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.mpfinalproject.model.ParliamentMember
+import com.example.mpfinalproject.ui.MemberListViewModel
 
 // 4.10.2024, Jommi Koljonen, 2013099
 

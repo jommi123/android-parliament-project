@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ParliamentMember (
-    val hetekaId: Int,
     val seatNumber: Int,
     val lastname: String,
     val firstname: String,

@@ -1,5 +1,9 @@
 package com.example.mpfinalproject.data
 
+import android.content.Context
+import com.example.mpfinalproject.database.DatabaseRepository
+import com.example.mpfinalproject.database.MemberDatabase
+import com.example.mpfinalproject.database.OfflineDatabaseRepository
 import com.example.mpfinalproject.network.MemberApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,9 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
     val memberDataRepository: MemberDataRepository
+    val databaseRepository: DatabaseRepository
 }
 
-class DefaultAppContainer: AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val baseUrl =
         "https://users.metropolia.fi/~peterh/"
@@ -26,5 +31,9 @@ class DefaultAppContainer: AppContainer {
 
     override val memberDataRepository: MemberDataRepository by lazy {
         NetworkMemberDataRepository(retrofitService)
+    }
+
+    override val databaseRepository: DatabaseRepository by lazy {
+        OfflineDatabaseRepository(MemberDatabase.getDatabase(context).memberDao())
     }
 }

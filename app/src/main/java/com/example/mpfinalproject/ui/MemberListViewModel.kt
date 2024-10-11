@@ -10,6 +10,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mpfinalproject.MemberDataApplication
 import com.example.mpfinalproject.data.MemberDataRepository
 import com.example.mpfinalproject.data.NetworkMemberDataRepository
+import com.example.mpfinalproject.database.DatabaseRepository
+import com.example.mpfinalproject.database.MemberDatabase
+import com.example.mpfinalproject.database.MemberEntity
+import com.example.mpfinalproject.database.OfflineDatabaseRepository
 import com.example.mpfinalproject.model.ParliamentMember
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +29,10 @@ data class MemberListUiState(
 )
 
 
-class MemberListViewModel(private val memberDataRepository: MemberDataRepository) : ViewModel() {
+class MemberListViewModel(
+    private val memberDataRepository: MemberDataRepository,
+    private val databaseRepository: DatabaseRepository
+) : ViewModel() {
 //    var memberListUiState by mutableStateOf(MemberListUiState())
 
     private val _uiState = MutableStateFlow(MemberListUiState())
@@ -39,10 +46,28 @@ class MemberListViewModel(private val memberDataRepository: MemberDataRepository
         viewModelScope.launch {
             //val members = MemberApi.retrofitService.getMembers()
             // val memberDataRepository = NetworkMemberDataRepository()
-            val members = memberDataRepository.getMemberData()
+            try {
 
-            _uiState.update { currentState ->
-                currentState.copy(members = members)
+                val members = memberDataRepository.getMemberData()
+
+                val membersToSave = members.map { member ->
+                    MemberEntity(
+                        seatNumber = member.seatNumber,
+                        lastname = member.lastname,
+                        firstname = member.firstname,
+                        party = member.party,
+                        minister = member.minister,
+                        pictureUrl = member.pictureUrl
+                    )
+                }
+
+                databaseRepository.insertAllMembers(membersToSave)
+
+                _uiState.update { currentState ->
+                    currentState.copy(members = members)
+                }
+            } catch (e: Exception) {
+
             }
         }
     }
@@ -52,7 +77,11 @@ class MemberListViewModel(private val memberDataRepository: MemberDataRepository
             initializer {
                 val application = (this[APPLICATION_KEY] as MemberDataApplication)
                 val memberDataRepository = application.container.memberDataRepository
-                MemberListViewModel(memberDataRepository = memberDataRepository)
+                val databaseRepository = application.container.databaseRepository
+                MemberListViewModel(
+                    memberDataRepository = memberDataRepository,
+                    databaseRepository = databaseRepository
+                )
             }
         }
     }
