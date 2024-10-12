@@ -32,7 +32,7 @@ import com.example.mpfinalproject.R
 
 
 @Composable
-fun MinisterScreen(
+fun MemberDetailScreen(
     modifier: Modifier = Modifier,
     memberViewModel: MemberViewModel = viewModel(),
 ) {
@@ -158,5 +158,5 @@ fun CommentSection(
 @Preview(showBackground = true)
 @Composable
 fun ScreenPreview() {
-    MinisterScreen()
+    MemberDetailScreen()
 }

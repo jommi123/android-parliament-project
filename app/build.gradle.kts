@@ -99,4 +99,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // WorkManager dependency
+    implementation(libs.androidx.work.runtime.ktx)
+
 }

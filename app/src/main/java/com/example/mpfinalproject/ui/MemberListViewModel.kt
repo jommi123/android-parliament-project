@@ -30,7 +30,6 @@ data class MemberListUiState(
 
 
 class MemberListViewModel(
-    private val memberDataRepository: MemberDataRepository,
     private val databaseRepository: DatabaseRepository
 ) : ViewModel() {
 //    var memberListUiState by mutableStateOf(MemberListUiState())
@@ -39,34 +38,27 @@ class MemberListViewModel(
     val uiState: StateFlow<MemberListUiState> = _uiState.asStateFlow()
 
     init {
-        getMembersData()
+        observerDatabaseMembers()
     }
 
-    fun getMembersData() {
+    private fun observerDatabaseMembers() {
         viewModelScope.launch {
-            //val members = MemberApi.retrofitService.getMembers()
-            // val memberDataRepository = NetworkMemberDataRepository()
-            try {
 
-                val members = memberDataRepository.getMemberData()
-
-                val membersToSave = members.map { member ->
-                    MemberEntity(
-                        seatNumber = member.seatNumber,
-                        lastname = member.lastname,
-                        firstname = member.firstname,
-                        party = member.party,
-                        minister = member.minister,
-                        pictureUrl = member.pictureUrl
+            databaseRepository.getAllMembersStream().collect() { memberEntities ->
+                val members = memberEntities.map { memberEntity ->
+                    ParliamentMember(
+                        seatNumber = memberEntity.seatNumber,
+                        lastname = memberEntity.lastname,
+                        firstname = memberEntity.firstname,
+                        party = memberEntity.party,
+                        minister = memberEntity.minister,
+                        pictureUrl = memberEntity.pictureUrl
                     )
                 }
 
-                databaseRepository.insertAllMembers(membersToSave)
-
                 _uiState.update { currentState ->
                     currentState.copy(members = members)
-                }
-            } catch (e: Exception) {
+            }
 
             }
         }
@@ -76,10 +68,8 @@ class MemberListViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as MemberDataApplication)
-                val memberDataRepository = application.container.memberDataRepository
                 val databaseRepository = application.container.databaseRepository
                 MemberListViewModel(
-                    memberDataRepository = memberDataRepository,
                     databaseRepository = databaseRepository
                 )
             }
