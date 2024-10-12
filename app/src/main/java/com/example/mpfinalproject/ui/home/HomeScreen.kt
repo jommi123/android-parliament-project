@@ -1,5 +1,6 @@
 package com.example.mpfinalproject.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -26,37 +27,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.mpfinalproject.model.ParliamentMember
+import com.example.mpfinalproject.ui.MemberAppBar
 import com.example.mpfinalproject.ui.MemberListViewModel
 
 // 4.10.2024, Jommi Koljonen, 2013099
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MemberAppBar(
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = { Text(text = "PM App") },
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = { navigateUp() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "back button"
-                    )
-                }
-            }
-        }
-    )
-}
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     memberListViewModel: MemberListViewModel = viewModel(factory = MemberListViewModel.Factory),
+    onNavigateToMemberDetail: (Int) -> Unit
 ) {
     val uiState by memberListViewModel.uiState.collectAsState()
 
@@ -68,8 +49,7 @@ fun HomeScreen(
     ) { padding ->
         LazyColumn() {
             items(uiState.members) { member ->
-                MemberCard(member, modifier = Modifier.padding(padding))
-
+                MemberCard(member, modifier = Modifier.padding(padding), onNavigateToMemberDetail = onNavigateToMemberDetail)
             }
         }
 
@@ -82,6 +62,7 @@ fun HomeScreen(
 @Composable
 fun MemberCard(
     member: ParliamentMember,
+    onNavigateToMemberDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
@@ -100,9 +81,11 @@ fun MemberCard(
                 Text(text = member.firstname)
 
             }
-            Button(onClick = { /*TODO*/ }) {
-
+            Button(onClick = { onNavigateToMemberDetail(member.seatNumber) }) {
+                Text(text = "View details")
             }
+            Log.d("seatnumber_membercard", member.seatNumber.toString())
+
         }
     }
 }

@@ -25,14 +25,15 @@ import kotlinx.coroutines.launch
 // 7.10.2024, Jommi Koljonen, 2013099
 
 data class MemberListUiState(
-    val members: List<ParliamentMember> = emptyList()
+    val members: List<ParliamentMember> = emptyList(),
+    val selectedMember: ParliamentMember? = null
 )
 
 
 class MemberListViewModel(
     private val databaseRepository: DatabaseRepository
 ) : ViewModel() {
-//    var memberListUiState by mutableStateOf(MemberListUiState())
+
 
     private val _uiState = MutableStateFlow(MemberListUiState())
     val uiState: StateFlow<MemberListUiState> = _uiState.asStateFlow()
@@ -58,11 +59,33 @@ class MemberListViewModel(
 
                 _uiState.update { currentState ->
                     currentState.copy(members = members)
-            }
+                }
 
             }
         }
     }
+
+    fun getMemberBySeatNumber(seatNumber: Int) {
+        viewModelScope.launch {
+            databaseRepository.getMemberStream(seatNumber).collect() { memberEntity ->
+                val parliamentMember = memberEntity?.let {
+                    ParliamentMember(
+                        seatNumber = it.seatNumber,
+                        lastname = it.lastname,
+                        firstname = it.firstname,
+                        party = it.party,
+                        minister = it.minister,
+                        pictureUrl = it.pictureUrl
+                    )
+                }
+
+                _uiState.update { currentState ->
+                    currentState.copy(selectedMember = parliamentMember)
+                }
+            }
+        }
+    }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

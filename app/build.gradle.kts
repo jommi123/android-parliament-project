@@ -75,6 +75,9 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
+    // navigation for compose
+    implementation(libs.androidx.navigation.compose)
+
     // Retrofit
     implementation(libs.retrofit)
 

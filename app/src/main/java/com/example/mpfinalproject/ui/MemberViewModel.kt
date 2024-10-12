@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.update
 
 
 data class MemberUiState(
-    val selectedMember: ParliamentMember? = null,
     val starRating: Int = 0,
     val comment: String = "",
     val comments: List<String> = emptyList()
