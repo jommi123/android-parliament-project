@@ -8,6 +8,9 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+//13.10.2024, Jommi Koljonen, 2013099
+
+
 @Dao
 interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

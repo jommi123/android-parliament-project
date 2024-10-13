@@ -9,8 +9,8 @@ import com.example.mpfinalproject.database.comments.CommentEntity
 import com.example.mpfinalproject.database.members.MemberDao
 import com.example.mpfinalproject.database.members.MemberEntity
 
-// 11.10.2024
-// Database class with a singleton Instance object
+// 11.10.2024, Jommi Koljonen, 2013099
+// database class that uses singleton pattern in order to have a single instance of the database
 
 @Database(entities = [MemberEntity::class, CommentEntity::class], version = 2, exportSchema = false)
 abstract class MemberDatabase : RoomDatabase() {

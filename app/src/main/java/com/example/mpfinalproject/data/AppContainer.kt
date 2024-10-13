@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 // 10.10.2024, Jommi Koljonen, 2013099
+// provides instances of repositories that manage data
 
 interface AppContainer {
     val memberDataRepository: MemberDataRepository
@@ -28,7 +29,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val retrofitService: MemberApiService by lazy {
+    private val retrofitService: MemberApiService by lazy {
         retrofit.create(MemberApiService::class.java)
     }
 

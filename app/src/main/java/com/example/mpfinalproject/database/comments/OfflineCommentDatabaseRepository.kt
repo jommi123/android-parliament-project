@@ -3,6 +3,7 @@ package com.example.mpfinalproject.database.comments
 import kotlinx.coroutines.flow.Flow
 
 // 13.10.2024
+// manages comment database operations with CommentDao
 
 class OfflineCommentDatabaseRepository(private val commentDao: CommentDao): CommentDatabaseRepository {
     override fun getCommentsForMemberStream(seatNumber: Int): Flow<List<CommentEntity>> =

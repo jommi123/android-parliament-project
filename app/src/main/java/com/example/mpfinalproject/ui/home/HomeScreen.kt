@@ -1,28 +1,20 @@
 package com.example.mpfinalproject.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -35,7 +27,6 @@ import com.example.mpfinalproject.ui.MemberListViewModel
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     memberListViewModel: MemberListViewModel = viewModel(factory = MemberListViewModel.Factory),
     onNavigateToMemberDetail: (Int) -> Unit
 ) {
@@ -44,20 +35,20 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             MemberAppBar(canNavigateBack = false,
-                navigateUp = { /*TODO*/ })
+                navigateUp = {})
         }
     ) { padding ->
-        LazyColumn() {
+        LazyColumn {
             items(uiState.members) { member ->
-                MemberCard(member, modifier = Modifier.padding(padding), onNavigateToMemberDetail = onNavigateToMemberDetail)
+                MemberCard(
+                    member,
+                    modifier = Modifier.padding(padding),
+                    onNavigateToMemberDetail = onNavigateToMemberDetail
+                )
             }
         }
-
     }
-
-
 }
-
 
 @Composable
 fun MemberCard(
@@ -66,33 +57,24 @@ fun MemberCard(
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
-        Column {
-            Row {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data("https://avoindata.eduskunta.fi/" + member.pictureUrl)
+                    .diskCachePolicy(coil.request.CachePolicy.ENABLED)
+                    .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = "parliament member picture"
+            )
 
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data("https://avoindata.eduskunta.fi/" + member.pictureUrl)
-                        .diskCachePolicy(coil.request.CachePolicy.ENABLED)
-                        .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-                        .build(),
-                    contentDescription = "parliament member picture"
-                )
+            Text(text = "${member.firstname} ${member.lastname}")
 
-                Text(text = member.firstname)
-
-            }
             Button(onClick = { onNavigateToMemberDetail(member.seatNumber) }) {
                 Text(text = "View details")
             }
-            Log.d("seatnumber_membercard", member.seatNumber.toString())
-
         }
     }
 }
-
-@Preview
-@Composable
-fun ListScreenPreview() {
-    MemberAppBar(canNavigateBack = true, navigateUp = { /*TODO*/ })
-}
-

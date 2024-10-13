@@ -1,16 +1,25 @@
 package com.example.mpfinalproject.ui
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.Button
@@ -52,7 +61,6 @@ fun MemberDetailScreen(
             memberViewModel.loadCommentsForMember(seatNumber)
         }
     }
-    Log.d("seatnumber_detail", seatNumber.toString())
 
     val memberUiState by memberViewModel.uiState.collectAsState()
     val memberListUiState by memberListViewModel.uiState.collectAsState()
@@ -63,6 +71,7 @@ fun MemberDetailScreen(
                 navigateUp = { navController.popBackStack() })
         }
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,17 +82,34 @@ fun MemberDetailScreen(
             Spacer(modifier = Modifier.size(20.dp))
 
             memberListUiState.selectedMember?.let {
-                AsyncImage(model = ImageRequest.Builder(context = LocalContext.current)
-                    .data("https://avoindata.eduskunta.fi/" + it.pictureUrl)
-                    .diskCachePolicy(coil.request.CachePolicy.ENABLED)
-                    .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-                    .build(),
-                    contentDescription = "parliament member picture")
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data("https://avoindata.eduskunta.fi/" + it.pictureUrl)
+                        .diskCachePolicy(coil.request.CachePolicy.ENABLED)
+                        .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+                        .build(),
+                    contentDescription = "parliament member picture"
+                )
+
+
+                val partyName = when (it.party) {
+                    "ps" -> "Perussuomalaiset"
+                    "kesk" -> "Suomen Keskusta"
+                    "kok" -> "Kansallinen Kokoomus"
+                    "sd" -> "Suomen Sosialidemokraattinen Puolue"
+                    "vas" -> "Vasemmistoliitto"
+                    "kd" -> "Suomen Kristillisdemokraatit"
+                    "r" -> "Suomen ruotsalainen kansanpuolue"
+                    "vihr" -> "Vihreä liitto"
+                    else -> "Liike Nyt"
+                }
 
                 Text(text = "${it.firstname} ${it.lastname}")
-                Text(text = it.party)
-                Text(text = it.minister.toString())
-                Text(text = it.seatNumber.toString())
+                Text(text = partyName)
+                if (it.minister) {
+                    Text(text = "Minister")
+                }
+                Text(text = "seat number: ${it.seatNumber}")
             }
 
             UserRating(
@@ -147,7 +173,7 @@ fun StarIcon(
         Icons.Sharp.Star, contentDescription = "star",
         tint = tint,
         modifier = Modifier
-            .size(52.dp)
+            .size(44.dp)
             .clickable { onRatingSelected() }
     )
 }
@@ -155,20 +181,20 @@ fun StarIcon(
 @Composable
 fun CommentSection(
     comment: String,
-    comments: List<String>,
+    comments: List<CommentUiState>,
     onCommentChanged: (String) -> Unit,
     onSubmitComment: (String) -> Unit,
 
     modifier: Modifier = Modifier
 
 ) {
-
-
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
             value = comment,
-            onValueChange = onCommentChanged
-        )
+            onValueChange = onCommentChanged,
+            placeholder = { Text(text = "Enter comment") },
+
+            )
 
         Button(onClick = { onSubmitComment(comment) }) {
             Text(text = "Comment")
@@ -176,9 +202,25 @@ fun CommentSection(
 
         Text(text = "Comments:")
 
-        LazyColumn {
-            items(comments) { commentText ->
-                Text(text = commentText, modifier = Modifier.padding(12.dp))
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(comments.reversed()) { commentUiState ->
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .border(
+                            BorderStroke(1.dp, Color.Gray),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = "${commentUiState.starRating} stars",
+                        modifier = Modifier.padding(12.dp)
+                    )
+
+
+                    Text(text = commentUiState.comment)
+                }
             }
         }
 

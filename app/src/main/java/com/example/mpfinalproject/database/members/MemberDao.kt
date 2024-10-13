@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
-// 11.10.2024
+// 11.10.2024, Jommi Koljonen, 2013099
 
 @Dao
 interface MemberDao {

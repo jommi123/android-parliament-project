@@ -4,8 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 // 11.10.2024
 
-// repository that provides insert, update, delete and retrieve of MemberEntity
-
 interface MemberDatabaseRepository {
 
     fun getAllMembersStream(): Flow<List<MemberEntity>>

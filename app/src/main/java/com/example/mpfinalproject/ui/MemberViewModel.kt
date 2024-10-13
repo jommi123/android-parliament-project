@@ -29,17 +29,20 @@ data class CommentUiState(
 data class MemberUiState(
     val starRating: Int = 0,
     val comment: String = "",
-    val comments: List<String> = emptyList()
+    val comments: List<CommentUiState> = emptyList()
 )
 
+// manages UI state for the MemberDetailScreen
+// the viewmodel interacts with commentDatabaseRepository to:
+// - load comments for specific members based on their seat number
+// - add a new comment with rating for a specific member
+// - handle star rating and comment input in the ui state
 
 class MemberViewModel(
     private val commentDatabaseRepository: CommentDatabaseRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MemberUiState())
     val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
-
-
 
 
     fun updateRating(rating: Int) {
@@ -52,7 +55,8 @@ class MemberViewModel(
         viewModelScope.launch {
             commentDatabaseRepository.getCommentsForMemberStream(seatNumber)
                 .collect { comments ->
-                    val commentList = comments.map { it.comment }
+                    val commentList =
+                        comments.map { CommentUiState(it.comment, it.starRating ?: 0) }
                     _uiState.update { currentState ->
                         currentState.copy(comments = commentList)
                     }
@@ -63,18 +67,21 @@ class MemberViewModel(
 
     fun addComment(comment: String, seatNumber: Int) {
         val commentText = _uiState.value.comment
+        val starRating = _uiState.value.starRating
+
         if (comment.isNotBlank()) {
             val newComment = CommentEntity(
                 memberSeatNumber = seatNumber,
                 comment = commentText,
-                starRating = _uiState.value.starRating
+                starRating = starRating
             )
 
             viewModelScope.launch {
                 commentDatabaseRepository.insertComment(newComment)
 
                 _uiState.update { currentState ->
-                    val updatedComments = currentState.comments + commentText
+                    val updatedComments =
+                        currentState.comments + CommentUiState(commentText, starRating)
                     currentState.copy(comments = updatedComments, comment = "")
                 }
             }
@@ -87,6 +94,7 @@ class MemberViewModel(
         }
     }
 
+    // provides a factory to create instances of the viewmodel
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -98,5 +106,4 @@ class MemberViewModel(
             }
         }
     }
-
 }

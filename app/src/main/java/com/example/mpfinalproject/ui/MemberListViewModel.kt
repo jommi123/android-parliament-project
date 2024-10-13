@@ -1,11 +1,15 @@
 package com.example.mpfinalproject.ui
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.mpfinalproject.MemberDataApplication
 import com.example.mpfinalproject.data.MemberDataRepository
 import com.example.mpfinalproject.database.members.MemberDatabaseRepository
@@ -16,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 // 7.10.2024, Jommi Koljonen, 2013099
@@ -25,6 +30,11 @@ data class MemberListUiState(
     val selectedMember: ParliamentMember? = null
 )
 
+// manages member data for the UI state
+// interacts with local memberDatabaseRepository and network memberDataRepository to:
+// - insert member data into the database
+// - retrieve the list of members
+// - retrieve a specific member based on their seat number
 
 class MemberListViewModel(
     private val memberDatabaseRepository: MemberDatabaseRepository,
@@ -104,6 +114,7 @@ class MemberListViewModel(
     }
 
 
+    // provides a factory to create instances of the viewmodel
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

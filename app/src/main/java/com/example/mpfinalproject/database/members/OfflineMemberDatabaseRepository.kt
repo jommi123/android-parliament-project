@@ -3,6 +3,7 @@ package com.example.mpfinalproject.database.members
 import kotlinx.coroutines.flow.Flow
 
 // 11.10.2024
+// manages member database operations with MemberDao
 
 class OfflineMemberDatabaseRepository(private val memberDao: MemberDao) : MemberDatabaseRepository {
     override fun getAllMembersStream(): Flow<List<MemberEntity>> =
