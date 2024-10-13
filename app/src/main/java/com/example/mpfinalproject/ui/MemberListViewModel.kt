@@ -31,7 +31,8 @@ data class MemberListUiState(
 
 
 class MemberListViewModel(
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
+    private val memberDataRepository: MemberDataRepository
 ) : ViewModel() {
 
 
@@ -44,6 +45,21 @@ class MemberListViewModel(
 
     private fun observerDatabaseMembers() {
         viewModelScope.launch {
+            val me = memberDataRepository.getMemberData()
+
+
+            val membersToSave = me.map { member ->
+                MemberEntity(
+                    seatNumber = member.seatNumber,
+                    lastname = member.lastname,
+                    firstname = member.firstname,
+                    party = member.party,
+                    minister = member.minister,
+                    pictureUrl = member.pictureUrl
+                )
+            }
+
+            databaseRepository.insertAllMembers(membersToSave)
 
             databaseRepository.getAllMembersStream().collect() { memberEntities ->
                 val members = memberEntities.map { memberEntity ->
@@ -92,8 +108,10 @@ class MemberListViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as MemberDataApplication)
                 val databaseRepository = application.container.databaseRepository
+                val memberDataRepository = application.container.memberDataRepository
                 MemberListViewModel(
-                    databaseRepository = databaseRepository
+                    databaseRepository = databaseRepository,
+                    memberDataRepository = memberDataRepository
                 )
             }
         }

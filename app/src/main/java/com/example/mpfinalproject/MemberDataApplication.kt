@@ -2,6 +2,7 @@ package com.example.mpfinalproject
 
 import android.app.Application
 import android.content.Context
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.mpfinalproject.data.AppContainer
@@ -19,15 +20,11 @@ class MemberDataApplication : Application() {
         super.onCreate()
         container = DefaultAppContainer(this)
 
-        schedulePeriodicFetchMembersWork(this)
+        //schedulePeriodicFetchMembersWork(this)
     }
 }
 
 fun schedulePeriodicFetchMembersWork(context: Context) {
-    val periodicWorkRequest = PeriodicWorkRequestBuilder<FetchMembersWorker>(
-        2, TimeUnit.MINUTES
-    )
-        .build()
-
-    WorkManager.getInstance(context).enqueue(periodicWorkRequest)
+    val oneTimeWorkRequest = OneTimeWorkRequestBuilder<FetchMembersWorker>().build()
+    WorkManager.getInstance(context).enqueue(oneTimeWorkRequest)
 }
