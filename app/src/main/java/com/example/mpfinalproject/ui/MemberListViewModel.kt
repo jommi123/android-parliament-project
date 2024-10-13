@@ -1,6 +1,5 @@
 package com.example.mpfinalproject.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -9,11 +8,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mpfinalproject.MemberDataApplication
 import com.example.mpfinalproject.data.MemberDataRepository
-import com.example.mpfinalproject.data.NetworkMemberDataRepository
-import com.example.mpfinalproject.database.DatabaseRepository
-import com.example.mpfinalproject.database.MemberDatabase
-import com.example.mpfinalproject.database.MemberEntity
-import com.example.mpfinalproject.database.OfflineDatabaseRepository
+import com.example.mpfinalproject.database.members.MemberDatabaseRepository
+import com.example.mpfinalproject.database.members.MemberEntity
 import com.example.mpfinalproject.model.ParliamentMember
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +27,7 @@ data class MemberListUiState(
 
 
 class MemberListViewModel(
-    private val databaseRepository: DatabaseRepository,
+    private val memberDatabaseRepository: MemberDatabaseRepository,
     private val memberDataRepository: MemberDataRepository
 ) : ViewModel() {
 
@@ -40,10 +36,11 @@ class MemberListViewModel(
     val uiState: StateFlow<MemberListUiState> = _uiState.asStateFlow()
 
     init {
-        observerDatabaseMembers()
+        insertMembersToDatabase()
+        getDatabaseMembers()
     }
 
-    private fun observerDatabaseMembers() {
+    private fun insertMembersToDatabase() {
         viewModelScope.launch {
             val me = memberDataRepository.getMemberData()
 
@@ -59,9 +56,13 @@ class MemberListViewModel(
                 )
             }
 
-            databaseRepository.insertAllMembers(membersToSave)
+            memberDatabaseRepository.insertAllMembers(membersToSave)
+        }
+    }
 
-            databaseRepository.getAllMembersStream().collect() { memberEntities ->
+    private fun getDatabaseMembers() {
+        viewModelScope.launch {
+            memberDatabaseRepository.getAllMembersStream().collect() { memberEntities ->
                 val members = memberEntities.map { memberEntity ->
                     ParliamentMember(
                         seatNumber = memberEntity.seatNumber,
@@ -83,7 +84,7 @@ class MemberListViewModel(
 
     fun getMemberBySeatNumber(seatNumber: Int) {
         viewModelScope.launch {
-            databaseRepository.getMemberStream(seatNumber).collect() { memberEntity ->
+            memberDatabaseRepository.getMemberStream(seatNumber).collect() { memberEntity ->
                 val parliamentMember = memberEntity?.let {
                     ParliamentMember(
                         seatNumber = it.seatNumber,
@@ -107,10 +108,10 @@ class MemberListViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as MemberDataApplication)
-                val databaseRepository = application.container.databaseRepository
+                val databaseRepository = application.container.memberDatabaseRepository
                 val memberDataRepository = application.container.memberDataRepository
                 MemberListViewModel(
-                    databaseRepository = databaseRepository,
+                    memberDatabaseRepository = databaseRepository,
                     memberDataRepository = memberDataRepository
                 )
             }

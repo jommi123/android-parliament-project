@@ -1,10 +1,10 @@
-package com.example.mpfinalproject.database
+package com.example.mpfinalproject.database.members
 
 import kotlinx.coroutines.flow.Flow
 
 // 11.10.2024
 
-class OfflineDatabaseRepository(private val memberDao: MemberDao) : DatabaseRepository {
+class OfflineMemberDatabaseRepository(private val memberDao: MemberDao) : MemberDatabaseRepository {
     override fun getAllMembersStream(): Flow<List<MemberEntity>> =
         memberDao.getAllMembers()
 

@@ -1,4 +1,4 @@
-package com.example.mpfinalproject.database
+package com.example.mpfinalproject.database.members
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -41,7 +41,7 @@ import com.example.mpfinalproject.R
 @Composable
 fun MemberDetailScreen(
     modifier: Modifier = Modifier,
-    memberViewModel: MemberViewModel = viewModel(),
+    memberViewModel: MemberViewModel = viewModel(factory = MemberViewModel.Factory),
     memberListViewModel: MemberListViewModel = viewModel(factory = MemberListViewModel.Factory),
     seatNumber: Int?,
     navController: NavController

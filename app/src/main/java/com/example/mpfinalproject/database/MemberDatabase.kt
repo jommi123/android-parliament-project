@@ -4,14 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.mpfinalproject.database.comments.CommentDao
+import com.example.mpfinalproject.database.comments.CommentEntity
+import com.example.mpfinalproject.database.members.MemberDao
+import com.example.mpfinalproject.database.members.MemberEntity
 
 // 11.10.2024
 // Database class with a singleton Instance object
 
-@Database(entities = [MemberEntity::class], version = 1, exportSchema = false)
+@Database(entities = [MemberEntity::class, CommentEntity::class], version = 2, exportSchema = false)
 abstract class MemberDatabase : RoomDatabase() {
 
     abstract fun memberDao(): MemberDao
+    abstract fun commentDao(): CommentDao
 
     companion object {
         @Volatile

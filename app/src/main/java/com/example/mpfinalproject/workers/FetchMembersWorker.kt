@@ -2,13 +2,10 @@ package com.example.mpfinalproject.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.mpfinalproject.data.MemberDataRepository
-import com.example.mpfinalproject.database.DatabaseRepository
-import com.example.mpfinalproject.database.MemberEntity
-import java.util.concurrent.TimeUnit
+import com.example.mpfinalproject.database.members.MemberDatabaseRepository
+import com.example.mpfinalproject.database.members.MemberEntity
 
 //12.10.2024
 
@@ -16,7 +13,7 @@ class FetchMembersWorker(
     context: Context,
     params: WorkerParameters,
     private val memberDataRepository: MemberDataRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: MemberDatabaseRepository
     ): CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {

@@ -1,6 +1,13 @@
 package com.example.mpfinalproject.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.mpfinalproject.MemberDataApplication
+import com.example.mpfinalproject.database.comments.CommentDatabaseRepository
+import com.example.mpfinalproject.database.comments.OfflineCommentDatabaseRepository
 import com.example.mpfinalproject.model.ParliamentMember
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +25,9 @@ data class MemberUiState(
 )
 
 
-class MemberViewModel : ViewModel() {
+class MemberViewModel(
+    private val commentDatabaseRepository: CommentDatabaseRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(MemberUiState())
     val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
 
@@ -45,6 +54,16 @@ class MemberViewModel : ViewModel() {
         }
     }
 
-
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as MemberDataApplication)
+                val commentDatabaseRepository = application.container.commentDatabaseRepository
+                MemberViewModel(
+                    commentDatabaseRepository = commentDatabaseRepository
+                )
+            }
+        }
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.example.mpfinalproject.database
+package com.example.mpfinalproject.database.members
 
 import kotlinx.coroutines.flow.Flow
 
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 // repository that provides insert, update, delete and retrieve of MemberEntity
 
-interface DatabaseRepository {
+interface MemberDatabaseRepository {
 
     fun getAllMembersStream(): Flow<List<MemberEntity>>
 
