@@ -49,6 +49,7 @@ fun MemberDetailScreen(
     LaunchedEffect(seatNumber) {
         if (seatNumber != null) {
             memberListViewModel.getMemberBySeatNumber(seatNumber)
+            memberViewModel.loadCommentsForMember(seatNumber)
         }
     }
     Log.d("seatnumber_detail", seatNumber.toString())
@@ -96,7 +97,11 @@ fun MemberDetailScreen(
                 comment = memberUiState.comment,
                 comments = memberUiState.comments,
                 onCommentChanged = { memberViewModel.updateCommentInput(it) },
-                onSubmitComment = { memberViewModel.addComment(it) }
+                onSubmitComment = {
+                    if (seatNumber != null) {
+                        memberViewModel.addComment(it, seatNumber = seatNumber)
+                    }
+                }
 
             )
 
