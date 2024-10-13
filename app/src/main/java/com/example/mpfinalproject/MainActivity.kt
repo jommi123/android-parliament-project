@@ -10,9 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.mpfinalproject.ui.AppNavGraph
-import com.example.mpfinalproject.ui.MemberAppBar
-import com.example.mpfinalproject.ui.MemberDetailScreen
-import com.example.mpfinalproject.ui.home.HomeScreen
 import com.example.mpfinalproject.ui.theme.MPFinalProjectTheme
 
 // 29.9.2024, Jommi Koljonen, 2013099
@@ -23,18 +20,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MPFinalProjectTheme {
-                MyApp()
+                PmApp()
             }
         }
     }
 }
 
 @Composable
-fun MyApp() {
+fun PmApp() {
     val navController = rememberNavController()
 
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         AppNavGraph(navController = navController, modifier = Modifier.padding(innerPadding))
     }
 }

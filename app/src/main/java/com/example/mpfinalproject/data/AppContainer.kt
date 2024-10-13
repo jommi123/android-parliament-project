@@ -11,14 +11,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 // 10.10.2024, Jommi Koljonen, 2013099
-// provides instances of repositories that manage data
+
 
 interface AppContainer {
     val memberDataRepository: MemberDataRepository
     val memberDatabaseRepository: MemberDatabaseRepository
     val commentDatabaseRepository: CommentDatabaseRepository
 }
-
+// provides instances of repositories that manage data
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val baseUrl =

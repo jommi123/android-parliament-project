@@ -1,6 +1,5 @@
 package com.example.mpfinalproject.ui
 
-import android.app.FragmentManager.BackStackEntry
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.mpfinalproject.ui.home.HomeScreen
 
 

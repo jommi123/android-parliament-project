@@ -9,8 +9,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mpfinalproject.MemberDataApplication
 import com.example.mpfinalproject.database.comments.CommentDatabaseRepository
 import com.example.mpfinalproject.database.comments.CommentEntity
-import com.example.mpfinalproject.database.comments.OfflineCommentDatabaseRepository
-import com.example.mpfinalproject.model.ParliamentMember
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +22,6 @@ data class CommentUiState(
     val comment: String,
     val starRating: Int
 )
-
 
 data class MemberUiState(
     val starRating: Int = 0,

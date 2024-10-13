@@ -1,11 +1,8 @@
 package com.example.mpfinalproject.ui
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.Button
@@ -35,21 +28,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.mpfinalproject.R
 
 // 29.9.2024, Jommi Koljonen, 2013099
 
 
 @Composable
 fun MemberDetailScreen(
-    modifier: Modifier = Modifier,
     memberViewModel: MemberViewModel = viewModel(factory = MemberViewModel.Factory),
     memberListViewModel: MemberListViewModel = viewModel(factory = MemberListViewModel.Factory),
     seatNumber: Int?,
@@ -139,11 +129,8 @@ fun MemberDetailScreen(
 fun UserRating(
     rating: Int,
     onRatingChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-
-    ) {
-
-    Row() {
+) {
+    Row {
         for (value in 1..5) {
             StarIcon(
                 rating = rating,
@@ -164,9 +151,7 @@ fun StarIcon(
     selectedColor: Color,
     unselectedColor: Color,
     onRatingSelected: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-
     val tint = if (rating >= ratingValue) selectedColor else unselectedColor
 
     Icon(
@@ -183,10 +168,7 @@ fun CommentSection(
     comment: String,
     comments: List<CommentUiState>,
     onCommentChanged: (String) -> Unit,
-    onSubmitComment: (String) -> Unit,
-
-    modifier: Modifier = Modifier
-
+    onSubmitComment: (String) -> Unit
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
@@ -218,17 +200,10 @@ fun CommentSection(
                         modifier = Modifier.padding(12.dp)
                     )
 
-
                     Text(text = commentUiState.comment)
                 }
             }
         }
 
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ScreenPreview() {
-
 }

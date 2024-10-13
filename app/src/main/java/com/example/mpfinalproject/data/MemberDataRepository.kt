@@ -4,13 +4,14 @@ import com.example.mpfinalproject.model.ParliamentMember
 import com.example.mpfinalproject.network.MemberApiService
 
 // 10.10.2024, Jommi Koljonen, 2013099
-// fetches member data using memberApiService
+
 
 interface MemberDataRepository {
     suspend fun getMemberData(): List<ParliamentMember>
 
 }
 
+// fetches member data using memberApiService
 class NetworkMemberDataRepository(
     private val memberApiService: MemberApiService
 ): MemberDataRepository {

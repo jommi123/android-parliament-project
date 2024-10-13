@@ -1,15 +1,11 @@
 package com.example.mpfinalproject.ui
 
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.example.mpfinalproject.MemberDataApplication
 import com.example.mpfinalproject.data.MemberDataRepository
 import com.example.mpfinalproject.database.members.MemberDatabaseRepository
@@ -20,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 
 // 7.10.2024, Jommi Koljonen, 2013099
@@ -52,10 +47,9 @@ class MemberListViewModel(
 
     private fun insertMembersToDatabase() {
         viewModelScope.launch {
-            val me = memberDataRepository.getMemberData()
+            val members = memberDataRepository.getMemberData()
 
-
-            val membersToSave = me.map { member ->
+            val membersToSave = members.map { member ->
                 MemberEntity(
                     seatNumber = member.seatNumber,
                     lastname = member.lastname,
@@ -72,7 +66,7 @@ class MemberListViewModel(
 
     private fun getDatabaseMembers() {
         viewModelScope.launch {
-            memberDatabaseRepository.getAllMembersStream().collect() { memberEntities ->
+            memberDatabaseRepository.getAllMembersStream().collect { memberEntities ->
                 val members = memberEntities.map { memberEntity ->
                     ParliamentMember(
                         seatNumber = memberEntity.seatNumber,
@@ -94,7 +88,7 @@ class MemberListViewModel(
 
     fun getMemberBySeatNumber(seatNumber: Int) {
         viewModelScope.launch {
-            memberDatabaseRepository.getMemberStream(seatNumber).collect() { memberEntity ->
+            memberDatabaseRepository.getMemberStream(seatNumber).collect { memberEntity ->
                 val parliamentMember = memberEntity?.let {
                     ParliamentMember(
                         seatNumber = it.seatNumber,
