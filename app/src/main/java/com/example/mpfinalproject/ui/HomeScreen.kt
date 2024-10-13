@@ -1,4 +1,4 @@
-package com.example.mpfinalproject.ui.home
+package com.example.mpfinalproject.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.mpfinalproject.model.ParliamentMember
-import com.example.mpfinalproject.ui.MemberAppBar
-import com.example.mpfinalproject.ui.MemberListViewModel
 
 // 4.10.2024, Jommi Koljonen, 2013099
 
